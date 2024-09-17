@@ -1,14 +1,24 @@
-Feature: US29 Uso de un API para alojar imágenes
-    Como desarrollador 
-    quiero integrar la API de almacenamiento de Firebase 
-    para que los usuarios puedan subir y visualizar sus imágenes de foto de perfil y publicaciones.
+Feature: US35 Seguridad y autenticación en nuestra API
+    Como usuario
+    quiero que la aplicación cumpla con los estándares de seguridad para proteger mi información registrada
+    para asegurar que mis datos están protegidos adecuadamente.
 
-Scenario: Subir imágenes
-    Given el <usuario> desea subir una <imagen> en nuestra plataforma
-    When se reciba la <imagen> en el formato compatible
-    Then el sistema sube la <imagen> usando la API del almacenamiento de Firebase para generar el <enlace> de visualización
+Scenario: Registro de un nuevo usuario con verificación de seguridad (sign-up)
+    Dado que el usuario desea que sus datos sean protegidos
+    Cuando el sistema recibe una solicitud POST con los datos del nuevo usuario a la API
+    Entonces se verificará el Token de autenticidad
+    Y una vez verificado, brindará respuesta a la petición realizada
 
 Examples:
-| usuario | imagen  | enlace                                              |
-| Pablo   | imagen1 | https://firebasestorage.googleapis.com/v0/b/imagen1 |
-| Ana     | imagen2 | https://firebasestorage.googleapis.com/v0/b/imagen2 |
+    | endpoint                   | method | requestBody                                           | expectedStatusCode | expectedResponseBody                  |
+    | /api/v1/authentication/sign-up | POST   | { "name": "John Doe", "email": "john.doe@example.com", "password": "securePassword123" } | 201                | { "message": "User registered successfully", "token": "validAuthToken" } |
+
+Scenario: Inicio de sesión del usuario con verificación de seguridad (sign-in)
+    Dado que el usuario desea que sus datos sean protegidos
+    Cuando el sistema recibe una solicitud POST con las credenciales de inicio de sesión del usuario (como correo electrónico y contraseña) a la API
+    Entonces se verificará el token de autenticidad
+    Y una vez verificado, la API responde con un código de estado 200 y un token de autenticación válido si las credenciales son correctas
+
+Examples:
+    | endpoint                   | method | requestBody                                      | expectedStatusCode | expectedResponseBody                                    |
+    | /api/v1/authentication/sign-in | POST   | { "email": "john.doe@example.com", "password": "securePassword123" } | 200                | { "message": "Login successful", "token": "validAuthToken" } |
