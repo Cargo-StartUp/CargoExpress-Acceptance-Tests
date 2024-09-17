@@ -1,24 +1,24 @@
-Feature: US03 Notificaciones de eventos relevantes
-    Como cliente de empresa logística 
-    quiero recibir notificaciones automáticas sobre eventos relevantes relacionados con mi envío, 
-    para estar informado sobre el progreso de mi mercancía sin tener que realizar un seguimiento constante.
+Feature: US33 Uso de nuestra API para gestionar usuarios
+    Como desarrollador
+    quiero integrar un API para gestionar la información de los usuarios en la base de datos
+    para poder manejar los datos de clientes y empresarios de manera eficiente.
 
-Scenario: Recepción de Notificación al Inicio del Transporte
-    Dado que el <cliente> registró el <envío> en la plataforma,
-    Cuando comienza el transporte,
-    Entonces recibe automáticamente una <notificación> con detalles relevantes sobre el envío.
-
-Examples:
-    | cliente | envío | notificación |
-    | Cliente A | Envío 1 | Notificación de Inicio de Transporte |
-
-Scenario: Notificación de Llegada a Punto de Control Importante
-    Dado que el <envío> está en tránsito,
-    Y se habilitó las notificaciones automáticas,
-    Cuando la mercancía llega a un <punto de control> importante,
-    Entonces se enviará una <notificación> instantánea que informará sobre este evento relevante
+Scenario: Agregar datos del cliente / empresario en la base de datos
+    Dado que el desarrollador tiene acceso a la documentación de la API y las credenciales necesarias para realizar la integración
+    Cuando el desarrollador envía una solicitud POST con los datos del cliente/empresario a la API
+    Entonces la API responde con un código de estado 200 y el usuario se agrega correctamente a la base de datos
 
 Examples:
-    | envío | punto de control | notificación |
-    | Envío 1 | Punto de Control 1 | Notificación de Llegada a Punto de Control Importante |
+    | endpoint          | method | requestBody                                  | expectedStatusCode |
+    | /api/v1/clients    | POST   | { "name": "John Doe", "phone": "12345", "ruc": "54321", "address": "123 Main Street", "subscription": "Premium", "userId": 1 } | 200                |
+    | /api/v1/entrepreneurs | POST   | { "name": "Jane Smith", "phone": "54321", "ruc": "12345", "address": "456 Elm Street", "subscription": "Standard", "userId": 1 } | 200                |
 
+Scenario: Obtener la información de un cliente / empresario
+    Dado que el desarrollador tiene acceso a la documentación de la API y las credenciales necesarias para realizar la integración
+    Cuando el desarrollador envía una solicitud GET a la API para obtener la información de un cliente / empresario específico
+    Entonces la API responde con un código de estado 200 y devuelve los datos del usuario solicitado
+
+Examples:
+    | endpoint          | method | expectedStatusCode | expectedResponseBody                                           |
+    | /api/v1/clients/1  | GET    | 200                | { "name": "John Doe", "phone": "12345", "ruc": "54321", "address": "123 Main Street", "subscription": "Premium", "userId": 1 } |
+    | /api/v1/entrepreneurs/1 | GET    | 200                | { "name": "Jane Smith", "phone": "54321", "ruc": "12345", "address": "456 Elm Street", "subscription": "Standard", "userId": 1 } |
